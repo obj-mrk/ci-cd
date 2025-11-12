@@ -10,4 +10,9 @@ public class MathUtilsTest {
         assertEquals(5, MathUtils.add(2, 3));
         assertEquals(0, MathUtils.add(-1, 1));
     }
+
+    @Test
+    public void testSqr() {
+        assertEquals(4, MathUtils.square(2));
+    }
 }
