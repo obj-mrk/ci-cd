@@ -26,8 +26,49 @@ jobs:
       - name: Run tests
         run: mvn test
 
+      # Генерация документации
+      - name: Generate Javadoc
+        run: mvn javadoc:javadoc
+
+      # Сохранение документации как артефакт
+      - name: Upload Javadoc as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: javadoc
+          path: target/site/apidocs/
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: java-app
           path: target/*.jar
+
+  # Новый job для публикации документации
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: build  # Ждет завершения job 'build'
+    if: github.ref == 'refs/heads/main'  # Только для main ветки
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Generate Javadoc
+        run: mvn javadoc:javadoc
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: target/site/apidocs/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
