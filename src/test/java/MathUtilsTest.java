@@ -15,4 +15,9 @@ public class MathUtilsTest {
     public void testSqr() {
         assertEquals(4, MathUtils.square(2));
     }
+
+    @Test
+    public void testFactorial() {
+        assertEquals(2, MathUtils.factorial(2));
+    }
 }
